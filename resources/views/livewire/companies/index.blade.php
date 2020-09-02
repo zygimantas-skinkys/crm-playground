@@ -2,7 +2,7 @@
 
 <div>
     <table class="table-auto">
-        <thead>
+        <thead class="border">
         <tr>
             <th class="px-4 py-2">#</th>
             <th class="px-4 py-2">Name</th>
@@ -13,7 +13,7 @@
         </thead>
         <tbody>
         @foreach($companies as $company)
-            <tr>
+           <tr class="{{ $loop->even ? 'bg-gray-100' : '' }}">
                 <td class="border px-4 py-2">
                     {{ ($companies->currentPage() -1) * $companies->perPage() + $loop->iteration }}
                 </td>

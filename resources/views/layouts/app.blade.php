@@ -8,12 +8,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ config('app.name') }} - @yield('title')</title>
     <link rel="stylesheet" href="{{ asset('css/tailwind.css') }}">
-    <livewire:styles />
+    <livewire:styles/>
 </head>
 <body>
-    <div class="container mx-auto">
-        @yield('content')
-    </div>
-    <livewire:scripts />
+
+@include('layouts.nav')
+
+<div class="container mx-auto">
+    @yield('content')
+</div>
+
+<livewire:scripts/>
+
 </body>
 </html>
