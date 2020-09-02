@@ -18,4 +18,9 @@ class Company extends Model
     {
         return Storage::disk('public')->url("companies_logo/$value");
     }
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
 }

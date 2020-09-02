@@ -18,3 +18,4 @@ Route::get('/', function () {
 })->name('home');
 
 Route::livewire('/companies', 'companies.index')->name('companies.index');
+Route::livewire('/companies/{company}/employees', 'employees.index')->name('employees.index');
