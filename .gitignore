@@ -5,6 +5,7 @@
 /vendor
 /.idea
 /.vagrant
+/public/css
 .env
 .env.backup
 .phpunit.result.cache
