@@ -1,132 +1,105 @@
 <?php
 
-namespace Tests\Feature\Employees;
-
 use App\Company;
 use App\Employee;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use Tests\TestCase;
 
-class ListEmployeesTest extends TestCase
-{
-    use RefreshDatabase;
+uses(RefreshDatabase::class);
 
-    public function test_employees_index_page_returns_successful_response(): void
-    {
-        $company = Company::factory()->create();
+it('returns a successful response', function () {
+    $company = Company::factory()->create();
 
-        $response = $this->get(route('employees.index', $company));
+    $this->get(route('employees.index', $company))->assertSuccessful();
+});
 
-        $response->assertStatus(200);
+it('displays the livewire component', function () {
+    $company = Company::factory()->create();
+
+    $this->get(route('employees.index', $company))->assertSeeLivewire(\App\Livewire\Employees\Index::class);
+});
+
+it('shows company name in title', function () {
+    $company = Company::factory()->create();
+
+    $this->get(route('employees.index', $company))->assertSee("{$company->name} employees");
+});
+
+it('displays company employees', function () {
+    $company = Company::factory()->create();
+    $employees = Employee::factory()->count(3)->create(['company_id' => $company->id]);
+
+    $response = $this->get(route('employees.index', $company));
+
+    foreach ($employees as $employee) {
+        $response->assertSee($employee->full_name);
+        $response->assertSee($employee->email);
     }
+});
 
-    public function test_employees_index_page_displays_livewire_component(): void
-    {
-        $company = Company::factory()->create();
+it('does not show other company employees', function () {
+    $company = Company::factory()->create();
+    $otherCompany = Company::factory()->create();
+    Employee::factory()->create(['company_id' => $company->id]);
+    $otherEmployee = Employee::factory()->create(['company_id' => $otherCompany->id]);
 
-        $response = $this->get(route('employees.index', $company));
+    $this->get(route('employees.index', $company))->assertDontSee($otherEmployee->full_name);
+});
 
-        $response->assertSeeLivewire(\App\Livewire\Employees\Index::class);
-    }
+it('shows correct pagination', function () {
+    $company = Company::factory()->create();
+    Employee::factory()->count(15)->create(['company_id' => $company->id]);
 
-    public function test_employees_index_page_shows_company_name_in_title(): void
-    {
-        $company = Company::factory()->create();
+    $this->get(route('employees.index', $company))->assertSee('Next');
+});
 
-        $response = $this->get(route('employees.index', $company));
+it('has correct table structure', function () {
+    $company = Company::factory()->create();
+    Employee::factory()->count(2)->create(['company_id' => $company->id]);
 
-        $response->assertSee("{$company->name} employees");
-    }
+    $response = $this->get(route('employees.index', $company));
 
-    public function test_employees_index_page_displays_company_employees(): void
-    {
-        $company = Company::factory()->create();
-        $employees = Employee::factory()->count(3)->create(['company_id' => $company->id]);
+    $response->assertSee('Full name');
+    $response->assertSee('Email');
+    $response->assertSee('Phone');
+});
 
-        $response = $this->get(route('employees.index', $company));
+it('shows empty state when no employees', function () {
+    $company = Company::factory()->create();
 
-        foreach ($employees as $employee) {
-            $response->assertSee($employee->full_name);
-            $response->assertSee($employee->email);
-        }
-    }
+    $response = $this->get(route('employees.index', $company));
 
-    public function test_employees_index_page_does_not_show_other_company_employees(): void
-    {
-        $company = Company::factory()->create();
-        $otherCompany = Company::factory()->create();
-        Employee::factory()->create(['company_id' => $company->id]);
-        $otherEmployee = Employee::factory()->create(['company_id' => $otherCompany->id]);
+    $response->assertSuccessful();
+    $response->assertSee("{$company->name} employees");
+});
 
-        $response = $this->get(route('employees.index', $company));
+it('navigates to next page', function () {
+    $company = Company::factory()->create();
+    Employee::factory()->count(12)->create(['company_id' => $company->id]);
 
-        $response->assertDontSee($otherEmployee->full_name);
-    }
+    $response = $this->get(route('employees.index', $company).'?page=2');
 
-    public function test_employees_index_page_shows_correct_pagination(): void
-    {
-        $company = Company::factory()->create();
-        Employee::factory()->count(15)->create(['company_id' => $company->id]);
+    $response->assertSuccessful();
+    $response->assertSee('Previous');
+});
 
-        $response = $this->get(route('employees.index', $company));
+it('renders livewire component with company and employees', function () {
+    $company = Company::factory()->create();
+    $employees = Employee::factory()->count(5)->create(['company_id' => $company->id]);
 
-        $response->assertSee('Next');
-    }
+    Livewire::test(\App\Livewire\Employees\Index::class, ['company' => $company])
+        ->assertSee($company->name)
+        ->assertSee($employees->first()->full_name)
+        ->assertSee($employees->first()->email)
+        ->assertStatus(200);
+});
 
-    public function test_employees_table_has_correct_structure(): void
-    {
-        $company = Company::factory()->create();
-        Employee::factory()->count(2)->create(['company_id' => $company->id]);
+it('has clickable employee links', function () {
+    $company = Company::factory()->create();
+    $employee = Employee::factory()->create(['company_id' => $company->id]);
 
-        $response = $this->get(route('employees.index', $company));
+    $response = $this->get(route('employees.index', $company));
 
-        $response->assertSee('Full name');
-        $response->assertSee('Email');
-        $response->assertSee('Phone');
-    }
-
-    public function test_employees_list_shows_empty_state_when_no_employees(): void
-    {
-        $company = Company::factory()->create();
-
-        $response = $this->get(route('employees.index', $company));
-
-        $response->assertStatus(200);
-        $response->assertSee("{$company->name} employees");
-    }
-
-    public function test_employees_pagination_navigates_to_next_page(): void
-    {
-        $company = Company::factory()->create();
-        Employee::factory()->count(12)->create(['company_id' => $company->id]);
-
-        $response = $this->get(route('employees.index', $company).'?page=2');
-
-        $response->assertStatus(200);
-        $response->assertSee('Previous');
-    }
-
-    public function test_livewire_component_renders_with_company_and_employees(): void
-    {
-        $company = Company::factory()->create();
-        $employees = Employee::factory()->count(5)->create(['company_id' => $company->id]);
-
-        Livewire::test(\App\Livewire\Employees\Index::class, ['company' => $company])
-            ->assertSee($company->name)
-            ->assertSee($employees->first()->full_name)
-            ->assertSee($employees->first()->email)
-            ->assertStatus(200);
-    }
-
-    public function test_employees_links_are_clickable(): void
-    {
-        $company = Company::factory()->create();
-        $employee = Employee::factory()->create(['company_id' => $company->id]);
-
-        $response = $this->get(route('employees.index', $company));
-
-        $response->assertSee("mailto:{$employee->email}");
-        $response->assertSee("tel:{$employee->phone}");
-    }
-}
+    $response->assertSee("mailto:{$employee->email}");
+    $response->assertSee("tel:{$employee->phone}");
+});
