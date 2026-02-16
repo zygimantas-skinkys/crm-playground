@@ -1,9 +1,12 @@
 module.exports = {
-  purge: [],
+  content: [
+    './resources/**/*.blade.php',
+    './resources/**/*.js',
+    './app/**/*.php',
+  ],
   theme: {
     extend: {},
   },
-  variants: {},
   plugins: [
       require('@tailwindcss/typography'),
   ],
