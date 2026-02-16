@@ -29,5 +29,4 @@ class Index extends Component
     {
         return 'layouts.pagination-links';
     }
-
 }

@@ -14,9 +14,7 @@ class CompanyController extends Controller
      *
      * @return View
      */
-    public function index()
-    {
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.
@@ -31,7 +29,6 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
      * @return Response
      */
     public function store(Request $request)
@@ -42,7 +39,6 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Company $company
      * @return Response
      */
     public function show(Company $company)
@@ -53,7 +49,6 @@ class CompanyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Company $company
      * @return Response
      */
     public function edit(Company $company)
@@ -64,8 +59,6 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param Company $company
      * @return Response
      */
     public function update(Request $request, Company $company)
@@ -76,7 +69,6 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Company $company
      * @return Response
      */
     public function destroy(Company $company)
