@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Livewire\Companies\Index as CompaniesIndex;
-use App\Http\Livewire\Employees\Index as EmployeesIndex;
+use App\Livewire\Companies\Index as CompaniesIndex;
+use App\Livewire\Employees\Index as EmployeesIndex;
 use Illuminate\Support\Facades\Route;
 
 /*

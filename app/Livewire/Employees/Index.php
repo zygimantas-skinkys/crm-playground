@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Employees;
+namespace App\Livewire\Employees;
 
 use App\Company;
 use Livewire\Component;
