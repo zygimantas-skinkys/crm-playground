@@ -14,7 +14,7 @@ class Index extends Component
     {
         return view('livewire.companies.index', [
             'companies' => Company::paginate(10),
-        ]);
+        ])->layout('layouts.app');
     }
 
     public function paginationView()

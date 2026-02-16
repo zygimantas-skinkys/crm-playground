@@ -22,7 +22,7 @@ class Index extends Component
         return view('livewire.employees.index', [
             'company' => $this->company,
             'employees' => $this->company->employees()->paginate(10),
-        ]);
+        ])->layout('layouts.app');
     }
 
     public function paginationView()
