@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\Companies\Index as CompaniesIndex;
+use App\Livewire\Employees\Index as EmployeesIndex;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,5 +19,5 @@ Route::get('/', function () {
     return view('index');
 })->name('home');
 
-Route::livewire('/companies', 'companies.index')->name('companies.index');
-Route::livewire('/companies/{company}/employees', 'employees.index')->name('employees.index');
+Route::get('/companies', CompaniesIndex::class)->name('companies.index');
+Route::get('/companies/{company}/employees', EmployeesIndex::class)->name('employees.index');

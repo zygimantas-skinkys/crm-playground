@@ -1,4 +1,4 @@
-@section('title', "$company->name employees")
+@section('title', "{$company->name} employees")
 
 <div>
     <h1 class="prose mt-8">{{ $company->name }} employees</h1>

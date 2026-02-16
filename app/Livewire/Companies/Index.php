@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Companies;
+namespace App\Livewire\Companies;
 
 use App\Company;
 use Livewire\Component;
@@ -14,7 +14,7 @@ class Index extends Component
     {
         return view('livewire.companies.index', [
             'companies' => Company::paginate(10),
-        ]);
+        ])->extends('layouts.app');
     }
 
     public function paginationView()
